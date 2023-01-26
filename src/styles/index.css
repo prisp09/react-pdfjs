@@ -1,0 +1,14 @@
+:root{
+    --red: #E23E57;
+    --purple: #88304E;
+    --violet: #522546;
+    --dawn: #311D3F;
+}
+
+body{
+    background-color: var(--dawn);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    margin: 0;
+}
