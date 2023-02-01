@@ -15,19 +15,21 @@ function Viewer(props) {
 			});
 		}
 		loadPDF();
-	}, []);
+	}, [props.src]);
 
 	React.useEffect(() => {
 		if (pdf) {
-			document.getElementById("Viewer").innerHTML = "";
+			document.getElementById("Viewer").innerHTML = `
+			<button id="download-button">Download pdf</button>
+			`;
 
 			for (let i = 1; i <= pdf.numPages; i++) {
 				const canvas = document.createElement("canvas");
 				canvas.id = `page_${i}`;
 				const ctx = canvas.getContext("2d");
-				const viewport = pdf.getPage(i).then((page) => {
 
-					const viewport = page.getViewport({ scale: 1.5 });
+				pdf.getPage(i).then((page) => {
+					const viewport = page.getViewport({ scale: 1.5 , rotation: page._pageInfo.rotate});
 					canvas.height = viewport.height;
 					canvas.width = viewport.width;
 					const renderContext = {
@@ -35,15 +37,31 @@ function Viewer(props) {
 						viewport: viewport,
 					};
 					page.render(renderContext);
+					console.log(page._pageInfo.rotate);
 					document.getElementById("Viewer").append(document.createElement("br"));
 					document.getElementById("Viewer").append(canvas);
 					document.getElementById("Viewer").append(document.createElement("br"));
-					if(i === pdf.numPages) {
+					if (i === pdf.numPages) {
 						document.getElementById("Viewer").append(document.createElement("br"));
 					}
 
 					document.getElementById(`page_${i}`).addEventListener("click", () => {
-						document.getElementById(`page_${i}`).classList.toggle("selected");
+						if(page._pageInfo.rotate === 270){
+							page._pageInfo.rotate = 0;
+						}
+						else{
+						page._pageInfo.rotate += 90;
+						}
+						const newViewPort = page.getViewport({ scale: 1.5, rotation: page._pageInfo.rotate});
+						console.log(page._pageInfo.rotate);
+						console.log(page.rotate);
+						canvas.height = newViewPort.height;
+						canvas.width = newViewPort.width;
+						page.render({
+							canvasContext: ctx,
+							viewport: newViewPort,
+						});
+						// console.log(rotation);
 					});
 
 					// document.getElementById(`page_${i}`).addEventListener("click", () => {
@@ -51,12 +69,25 @@ function Viewer(props) {
 					// })
 				});
 			}
+
+			document.getElementById("download-button").addEventListener("click", () => {
+				pdf.getData().then((data) => {
+					console.log(data);
+					const blob = new Blob([data], { type: "application/pdf" });
+					const link = document.createElement("a");
+					link.href = window.URL.createObjectURL(blob);
+					link.download = "sample.pdf";
+					link.click();
+				});
+			});
 		}
 	}, [pdf]);
 
 	return (
 		<div id="viewer-container">
-			<div id="Viewer"></div>
+			<div id="Viewer">
+
+			</div>
 		</div>
 	);
 }

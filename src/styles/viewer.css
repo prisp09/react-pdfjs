@@ -9,7 +9,7 @@
 }
 
 .selected{
-    transform: rotateZ(-90deg);
+    transform: rotateZ(90deg);
 }
 
 canvas:hover{
