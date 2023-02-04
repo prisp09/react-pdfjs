@@ -8,10 +8,6 @@
     justify-content: center;
 }
 
-.selected{
-    transform: rotateZ(90deg);
-}
-
-canvas:hover{
+button:hover{
     cursor: pointer;
 }
