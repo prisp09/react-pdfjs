@@ -19,15 +19,21 @@ function Viewer(props) {
 			await pdfjsLib.getDocument(props.src).promise.then((pdf_) => {
 				setPdf(pdf_);
 			});
+		}
+
+		async function loadPDFObj() {
 			const existingPdfBytes = await fetch(props.src).then((res) => res.arrayBuffer());
 			const pdfDoc = await PDFDocument.load(existingPdfBytes);
 			setPdfObj(pdfDoc);
 		}
+
+		loadPDFObj();
+
 		loadPDF();
 	}, [props.src]);
 
 	React.useEffect(() => {
-		if (pdf) {
+		if (pdf && pdfObj) {
 			document.getElementById("Viewer").innerHTML = `
 			<button id="download-button">Download pdf</button>
 			`;
@@ -86,7 +92,7 @@ function Viewer(props) {
 				console.log(pdf);
 				const pages = pdfObj.getPages();
 				console.log(pages);
-				for(let i=0;i<pages.length;i++){
+				for (let i = 0; i < pages.length; i++) {
 					pages[i].setRotation(degrees(rotation[i]));
 				}
 				pdfObj.save().then((_pdfBytes) => {
