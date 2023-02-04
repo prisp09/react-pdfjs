@@ -1,7 +1,7 @@
 import React from "react";
 import * as pdfjsLib from "pdfjs-dist";
 
-import { PDFDocument, degrees, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, degrees, rgb } from "pdf-lib";
 
 import "../styles/viewer.css";
 
