@@ -27,7 +27,7 @@ function Viewer(props) {
 	}, [props.src]);
 
 	React.useEffect(() => {
-		if (pdf && pdfObj) {
+		if (pdf) {
 			document.getElementById("Viewer").innerHTML = `
 			<button id="download-button">Download pdf</button>
 			`;
